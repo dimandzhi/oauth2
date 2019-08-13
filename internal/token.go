@@ -65,10 +65,12 @@ type Token struct {
 // tokenJSON is the struct representing the HTTP response from OAuth2
 // providers returning a token in JSON form.
 type tokenJSON struct {
-	AccessToken  string         `json:"access_token"`
-	TokenType    string         `json:"token_type"`
-	RefreshToken string         `json:"refresh_token"`
-	ExpiresIn    expirationTime `json:"expires_in"` // at least PayPal returns string, while most return number
+	AccessToken      string         `json:"access_token"`
+	TokenType        string         `json:"token_type"`
+	RefreshToken     string         `json:"refresh_token"`
+	RefreshExpiresIn int32          `json:"refresh_expires_in"`
+	ExpiresIn        expirationTime `json:"expires_in"` // at least PayPal returns string, while most return number
+	Expires          expirationTime `json:"expires"`    // broken Facebook spelling of expires_in
 }
 
 func (e *tokenJSON) expiry() (t time.Time) {
