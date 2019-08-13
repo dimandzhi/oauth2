@@ -51,6 +51,12 @@ type Token struct {
 	// mechanisms for that TokenSource will not be used.
 	Expiry time.Time
 
+	// RefreshExpiry is the optional expiration time of the refresh token.
+	//
+	// If zero, TokenSource implementations will forever reuse the same
+	// RefreshToken if any provided.
+	RefreshExpiry time.Time
+
 	// Raw optionally contains extra metadata from the server
 	// when updating a token.
 	Raw interface{}
@@ -68,6 +74,13 @@ type tokenJSON struct {
 func (e *tokenJSON) expiry() (t time.Time) {
 	if v := e.ExpiresIn; v != 0 {
 		return time.Now().Add(time.Duration(v) * time.Second)
+	}
+	return
+}
+
+func (e *tokenJSON) refreshExpiry() (t time.Time) {
+	if v := e.RefreshExpiresIn; v > 0 {
+		t = time.Now().Add(time.Duration(v) * time.Second)
 	}
 	return
 }
@@ -270,11 +283,12 @@ func doTokenRoundTrip(ctx context.Context, req *http.Request) (*Token, error) {
 			return nil, err
 		}
 		token = &Token{
-			AccessToken:  tj.AccessToken,
-			TokenType:    tj.TokenType,
-			RefreshToken: tj.RefreshToken,
-			Expiry:       tj.expiry(),
-			Raw:          make(map[string]interface{}),
+			AccessToken:   tj.AccessToken,
+			TokenType:     tj.TokenType,
+			RefreshToken:  tj.RefreshToken,
+			Expiry:        tj.expiry(),
+			RefreshExpiry: tj.refreshExpiry(),
+			Raw:           make(map[string]interface{}),
 		}
 		json.Unmarshal(body, &token.Raw) // no error checks for optional fields
 	}

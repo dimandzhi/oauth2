@@ -266,7 +266,6 @@ func (tf *tokenRefresher) Token() (*Token, error) {
 	if tf.refreshToken == "" {
 		return nil, errors.New("oauth2: token expired and refresh token is not set")
 	}
-
 	tk, err := retrieveToken(tf.ctx, tf.conf, url.Values{
 		"grant_type":    {"refresh_token"},
 		"refresh_token": {tf.refreshToken},

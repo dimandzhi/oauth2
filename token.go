@@ -49,6 +49,12 @@ type Token struct {
 	// mechanisms for that TokenSource will not be used.
 	Expiry time.Time `json:"expiry,omitempty"`
 
+	// RefreshExpiry is the optional expiration time of the refresh token.
+	//
+	// If zero, TokenSource implementations will forever reuse the same
+	// RefreshToken if any provided.
+	RefreshExpiry time.Time `json:"refresh_expiry,omitempty"`
+
 	// raw optionally contains extra metadata from the server
 	// when updating a token.
 	raw interface{}
@@ -142,11 +148,12 @@ func tokenFromInternal(t *internal.Token) *Token {
 		return nil
 	}
 	return &Token{
-		AccessToken:  t.AccessToken,
-		TokenType:    t.TokenType,
-		RefreshToken: t.RefreshToken,
-		Expiry:       t.Expiry,
-		raw:          t.Raw,
+		AccessToken:   t.AccessToken,
+		TokenType:     t.TokenType,
+		RefreshToken:  t.RefreshToken,
+		Expiry:        t.Expiry,
+		RefreshExpiry: t.RefreshExpiry,
+		raw:           t.Raw,
 	}
 }
 
