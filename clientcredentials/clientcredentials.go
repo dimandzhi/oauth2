@@ -111,10 +111,11 @@ func (c *tokenSource) Token() (*oauth2.Token, error) {
 		return nil, err
 	}
 	t := &oauth2.Token{
-		AccessToken:  tk.AccessToken,
-		TokenType:    tk.TokenType,
-		RefreshToken: tk.RefreshToken,
-		Expiry:       tk.Expiry,
+		AccessToken:   tk.AccessToken,
+		TokenType:     tk.TokenType,
+		RefreshToken:  tk.RefreshToken,
+		Expiry:        tk.Expiry,
+		RefreshExpiry: tk.RefreshExpiry,
 	}
 	return t.WithExtra(tk.Raw), nil
 }

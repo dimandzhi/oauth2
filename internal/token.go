@@ -68,7 +68,7 @@ type tokenJSON struct {
 	AccessToken      string         `json:"access_token"`
 	TokenType        string         `json:"token_type"`
 	RefreshToken     string         `json:"refresh_token"`
-	RefreshExpiresIn int32          `json:"refresh_expires_in"`
+	RefreshExpiresIn expirationTime `json:"refresh_expires_in"`
 	ExpiresIn        expirationTime `json:"expires_in"` // at least PayPal returns string, while most return number
 	Expires          expirationTime `json:"expires"`    // broken Facebook spelling of expires_in
 }
